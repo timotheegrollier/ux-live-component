@@ -52,7 +52,7 @@ class BlogController extends AbstractController
         $entityManagerInterface->persist($blogpost);
         $entityManagerInterface->flush();
         
-        dd('Blog post created');
+        return $this->redirectToRoute('app_blog');
     }
 
 }
