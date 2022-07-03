@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use Faker\Factory;
 use App\Entity\Blog;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,6 +37,22 @@ class BlogController extends AbstractController
             'controller_name' => 'BlogController',
             'blogpost' => $blogpost,
         ]);
+    }
+
+    #[Route('/generate', name: 'app_generate')]
+    public function generate(EntityManagerInterface $entityManagerInterface): Response
+    {
+        $faker = Factory::create('fr_FR');
+
+        $blogpost = new Blog();
+
+        $blogpost->setTitle($faker->sentence())
+            ->setContent($faker->paragraph());
+
+        $entityManagerInterface->persist($blogpost);
+        $entityManagerInterface->flush();
+        
+        dd('Blog post created');
     }
 
 }
